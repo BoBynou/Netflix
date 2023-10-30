@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestion des Acteurs</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>Gestion des Acteurs</h1>
+
+    <div id="actorsList">
+        <!-- La liste des acteurs sera affichée ici -->
+    </div>
+
+    <form id="actorForm">
+        <h2>Ajouter un Acteur</h2>
+        <label for="actorFirstName">Prénom:</label>
+        <input type="text" id="actorFirstName" name="actorFirstName" required>
+
+        <label for="actorLastName">Nom:</label>
+        <input type="text" id="actorLastName" name="actorLastName" required>
+
+        <label for="actorBirthDate">Date de Naissance:</label>
+        <input type="date" id="actorBirthDate" name="actorBirthDate" required>
+
+        <button type="submit">Ajouter</button>
+    </form>
+
+    <script src="acteur.js"></script>
+</body>
+</html>
