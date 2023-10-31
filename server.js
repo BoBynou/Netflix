@@ -4,6 +4,7 @@ const http = require('http');
 
 const app = express();
 const server = http.createServer(app);
+app.use(express.json());
 
 const bddConnexion = mysql.createConnection({
     host: 'localhost',
@@ -26,41 +27,20 @@ server.listen(3000, () => {
   console.log('Server is listening on port 3000');
 });
 
-// app.get('/acteurs', (req, res) => {
-//     const query = 'SELECT * FROM acteurs';
-//     bddConnexion.query(query, (err, results) => {
-//         if (err) throw err;
-//         res.json(results);
-//     });
-// });
-  
-//   app.post('/acteurs', (req, res) => {
-//     const nouvelActeur = req.body;
-//     connection.query('INSERT INTO acteurs SET ?', nouvelActeur, (error, result) => {
-//       if (error) {
-//         console.error('Erreur lors de la création de l\'acteur : ' + error);
-//         res.status(500).json({ error: 'Erreur lors de la création de l\'acteur' });
-//       } else {
-//         res.status(201).json({ message: 'Acteur créé avec succès' });
-//       }
-//     });
-//   });
-
-app.get('/acteurs', (req, res) => {
-    connection.query('SELECT * FROM acteurs', (error, results) => {
-      if (error) {
-        console.error('Erreur lors de la récupération des acteurs : ' + error);
-        res.status(500).json({ error: 'Erreur lors de la récupération des acteurs' });
-      } else {
-        res.json(results);
-      }
-    });
+app.get('/getActeurs', (req, res) => {
+  const query = 'SELECT * FROM  acteurs';
+  bddConnexion.query(query, (err, results) => {
+      if (err) throw err;
+      res.json(results);
   });
-  
-  // Créer un acteur
-  app.post('/acteurs', (req, res) => {
+});
+
+  app.post('/postActeurs', (req, res) => {
     const nouvelActeur = req.body;
-    connection.query('INSERT INTO acteurs SET ?', nouvelActeur, (error, result) => {
+    const query = 'INSERT INTO acteurs (nom, prenom, date_de_naissance) VALUES (?, ?, ?)';
+    const values = [nouvelActeur.nom, nouvelActeur.prenom, nouvelActeur.date_de_naissance];
+
+    bddConnexion.query(query, values, (error, result) => {
       if (error) {
         console.error('Erreur lors de la création de l\'acteur : ' + error);
         res.status(500).json({ error: 'Erreur lors de la création de l\'acteur' });
@@ -69,48 +49,18 @@ app.get('/acteurs', (req, res) => {
       }
     });
   });
-  
-  // Récupérer un acteur spécifique par ID
-  app.get('/acteurs/:id', (req, res) => {
+
+  app.delete('/delActeurs/:id', (req, res) => {
     const acteurId = req.params.id;
-    connection.query('SELECT * FROM acteurs WHERE id = ?', [acteurId], (error, results) => {
-      if (error) {
-        console.error('Erreur lors de la récupération de l\'acteur : ' + error);
-        res.status(500).json({ error: 'Erreur lors de la récupération de l\'acteur' });
-      } else if (results.length === 0) {
-        res.status(404).json({ message: 'Acteur non trouvé' });
-      } else {
-        res.json(results[0]);
-      }
+    bddConnexion.query('DELETE FROM acteurs WHERE id = ?', [acteurId], (error, result) => {
+        if (error) {
+            console.error('Erreur lors de la suppression de l\'acteur : ' + error);
+            res.status(500).json({ error: 'Erreur lors de la suppression de l\'acteur' });
+        } else {
+            res.json({ message: 'Acteur supprimé avec succès' });
+        }
     });
-  });
-  
-  // Modifier un acteur spécifique par ID
-  app.put('/acteurs/:id', (req, res) => {
-    const acteurId = req.params.id;
-    const nouveauActeur = req.body;
-    connection.query('UPDATE acteurs SET ? WHERE id = ?', [nouveauActeur, acteurId], (error, result) => {
-      if (error) {
-        console.error('Erreur lors de la modification de l\'acteur : ' + error);
-        res.status(500).json({ error: 'Erreur lors de la modification de l\'acteur' });
-      } else {
-        res.json({ message: 'Acteur modifié avec succès' });
-      }
-    });
-  });
-  
-  // Supprimer un acteur spécifique par ID
-  app.delete('/acteurs/:id', (req, res) => {
-    const acteurId = req.params.id;
-    connection.query('DELETE FROM acteurs WHERE id = ?', [acteurId], (error, result) => {
-      if (error) {
-        console.error('Erreur lors de la suppression de l\'acteur : ' + error);
-        res.status(500).json({ error: 'Erreur lors de la suppression de l\'acteur' });
-      } else {
-        res.json({ message: 'Acteur supprimé avec succès' });
-      }
-    });
-  });
+});
 
 // Récupérer une collection de réalisateurs
 app.get('/realisateurs', (req, res) => {
