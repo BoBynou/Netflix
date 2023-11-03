@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestion des Films</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>Gestion des Films</h1>
+
+    <div id="filmList">
+        <!-- La liste des acteurs sera affichée ici -->
+    </div>
+
+    <form id="filmForm">
+        <h2>Ajouter un Film</h2>
+        <label for="filmFirstName">Nom:</label>
+        <input type="text" id="filmFirstName" name="filmFirstName" required>
+
+        <label for="filmLastName">Description:</label>
+        <input type="text" id="filmLastName" name="filmLastName" required>
+
+        <label for="filmBirthDate">Date de Naissance:</label>
+        <input type="date" id="filmBirthDate" name="filmBirthDate" required>
+
+        <button type="submit">Ajouter</button>
+    </form>
+    <script src="film.js"></script>
+</body>
+</html>
