@@ -1,4 +1,4 @@
-const mysql = require('mysql2')
+const mysql = require('mysql2');
 const express = require('express');
 const http = require('http');
 
@@ -63,8 +63,8 @@ app.get('/getActeurs', (req, res) => {
 });
 
 // Récupérer une collection de réalisateurs
-app.get('/realisateurs', (req, res) => {
-    connection.query('SELECT * FROM realisateurs', (error, results) => {
+app.get('/getreal', (req, res) => {
+    bddConnexion.query('SELECT * FROM realisateurs', (error, results) => {
       if (error) {
         console.error('Erreur lors de la récupération des réalisateurs : ' + error);
         res.status(500).json({ error: 'Erreur lors de la récupération des réalisateurs' });
@@ -75,14 +75,17 @@ app.get('/realisateurs', (req, res) => {
   });
   
   // Créer un réalisateur
-  app.post('/realisateurs', (req, res) => {
-    const nouveauRealisateur = req.body;
-    connection.query('INSERT INTO realisateurs SET ?', nouveauRealisateur, (error, result) => {
+  app.post('/postreals', (req, res) => {
+    const nouvelReal = req.body;
+    const query = 'INSERT INTO realisateurs (nom, prenom, date_de_naissance) VALUES (?, ?, ?)';
+    const values = [nouvelReal.nom, nouvelReal.prenom, nouvelReal.date_de_naissance];
+
+    bddConnexion.query(query, values, (error, result) => {
       if (error) {
-        console.error('Erreur lors de la création du réalisateur : ' + error);
-        res.status(500).json({ error: 'Erreur lors de la création du réalisateur' });
+        console.error('Erreur lors de la création du réal : ' + error);
+        res.status(500).json({ error: 'Erreur lors de la création du réal' });
       } else {
-        res.status(201).json({ message: 'Réalisateur créé avec succès' });
+        res.status(201).json({ message: 'Réal créé avec succès' });
       }
     });
   });
@@ -90,7 +93,7 @@ app.get('/realisateurs', (req, res) => {
   // Récupérer un réalisateur spécifique par ID
   app.get('/realisateurs/:id', (req, res) => {
     const realisateurId = req.params.id;
-    connection.query('SELECT * FROM realisateurs WHERE id = ?', [realisateurId], (error, results) => {
+    bddConnexion.query('SELECT * FROM realisateurs WHERE id = ?', [realisateurId], (error, results) => {
       if (error) {
         console.error('Erreur lors de la récupération du réalisateur : ' + error);
         res.status(500).json({ error: 'Erreur lors de la récupération du réalisateur' });
@@ -106,7 +109,7 @@ app.get('/realisateurs', (req, res) => {
   app.put('/realisateurs/:id', (req, res) => {
     const realisateurId = req.params.id;
     const nouveauRealisateur = req.body;
-    connection.query('UPDATE realisateurs SET ? WHERE id = ?', [nouveauRealisateur, realisateurId], (error, result) => {
+    bddConnexion.query('UPDATE realisateurs SET ? WHERE id = ?', [nouveauRealisateur, realisateurId], (error, result) => {
       if (error) {
         console.error('Erreur lors de la modification du réalisateur : ' + error);
         res.status(500).json({ error: 'Erreur lors de la modification du réalisateur' });
@@ -117,9 +120,9 @@ app.get('/realisateurs', (req, res) => {
   });
   
   // Supprimer un réalisateur spécifique par ID
-  app.delete('/realisateurs/:id', (req, res) => {
+  app.delete('/delreals/:id', (req, res) => {
     const realisateurId = req.params.id;
-    connection.query('DELETE FROM realisateurs WHERE id = ?', [realisateurId], (error, result) => {
+    bddConnexion.query('DELETE FROM realisateurs WHERE id = ?', [realisateurId], (error, result) => {
       if (error) {
         console.error('Erreur lors de la suppression du réalisateur : ' + error);
         res.status(500).json({ error: 'Erreur lors de la suppression du réalisateur' });
@@ -130,8 +133,8 @@ app.get('/realisateurs', (req, res) => {
   });
   
 // Récupérer une collection de films
-app.get('/films', (req, res) => {
-    connection.query('SELECT * FROM films', (error, results) => {
+app.get('/getfilms', (req, res) => {
+    bddConnexion.query('SELECT * FROM films', (error, results) => {
       if (error) {
         console.error('Erreur lors de la récupération des films : ' + error);
         res.status(500).json({ error: 'Erreur lors de la récupération des films' });
@@ -142,14 +145,17 @@ app.get('/films', (req, res) => {
   });
   
   // Créer un film
-  app.post('/films', (req, res) => {
+  app.post('/postfilm', (req, res) => {
     const nouveauFilm = req.body;
-    connection.query('INSERT INTO films SET ?', nouveauFilm, (error, result) => {
+    console.log(nouveauFilm);
+    const query = 'INSERT INTO films (nom, description, date_de_parution) VALUES (?, ?, ?)';
+    const values = [nouveauFilm.nom, nouveauFilm.description, nouveauFilm.date_de_parution];   
+    bddConnexion.query(query, values, (error, result) => {
       if (error) {
         console.error('Erreur lors de la création du film : ' + error);
         res.status(500).json({ error: 'Erreur lors de la création du film' });
       } else {
-        res.status(201).json({ message: 'Film créé avec succès' });
+        res.status(201).json({ message: 'FIlm créé avec succès' });
       }
     });
   });
@@ -157,7 +163,7 @@ app.get('/films', (req, res) => {
   // Récupérer un film spécifique par ID
   app.get('/films/:id', (req, res) => {
     const filmId = req.params.id;
-    connection.query('SELECT * FROM films WHERE id = ?', [filmId], (error, results) => {
+    bddConnexion.query('SELECT * FROM films WHERE id = ?', [filmId], (error, results) => {
       if (error) {
         console.error('Erreur lors de la récupération du film : ' + error);
         res.status(500).json({ error: 'Erreur lors de la récupération du film' });
@@ -173,7 +179,7 @@ app.get('/films', (req, res) => {
   app.put('/films/:id', (req, res) => {
     const filmId = req.params.id;
     const nouveauFilm = req.body;
-    connection.query('UPDATE films SET ? WHERE id = ?', [nouveauFilm, filmId], (error, result) => {
+    bddConnexion.query('UPDATE films SET ? WHERE id = ?', [nouveauFilm, filmId], (error, result) => {
       if (error) {
         console.error('Erreur lors de la modification du film : ' + error);
         res.status(500).json({ error: 'Erreur lors de la modification du film' });
@@ -184,9 +190,9 @@ app.get('/films', (req, res) => {
   });
   
   // Supprimer un film spécifique par ID
-  app.delete('/films/:id', (req, res) => {
+  app.delete('/delfilm/:id', (req, res) => {
     const filmId = req.params.id;
-    connection.query('DELETE FROM films WHERE id = ?', [filmId], (error, result) => {
+    bddConnexion.query('DELETE FROM films WHERE id = ?', [filmId], (error, result) => {
       if (error) {
         console.error('Erreur lors de la suppression du film : ' + error);
         res.status(500).json({ error: 'Erreur lors de la suppression du film' });

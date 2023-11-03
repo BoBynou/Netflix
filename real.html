@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestion des Réalisateurs</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>Gestion des Réalisateurs</h1>
+
+    <div id="realsList">
+        <!-- La liste des acteurs sera affichée ici -->
+    </div>
+
+    <form id="realForm">
+        <h2>Ajouter un Acteur</h2>
+        <label for="realFirstName">Prénom:</label>
+        <input type="text" id="realFirstName" name="realFirstName" required>
+
+        <label for="realLastName">Nom:</label>
+        <input type="text" id="realLastName" name="realLastName" required>
+
+        <label for="realBirthDate">Date de Naissance:</label>
+        <input type="date" id="realBirthDate" name="realBirthDate" required>
+
+        <button type="submit">Ajouter</button>
+    </form>
+    <script src="real.js"></script>
+</body>
+</html>
